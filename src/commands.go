@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -50,4 +51,25 @@ func CommandAdd(params []string) {
 	}
 
 	DownloadFromGithub(repo)
+}
+
+// Remove Command
+func CommandRemove(params []string) {
+	if len(params) > 0 {
+		// Remove Package from unikorn folder
+
+		pkg := params[0]
+		pkg = fmt.Sprintf("unikorn/%s", pkg)
+		fmt.Printf("Trying to Remove Package From: %s\n", pkg)
+
+		// Remove from Folder
+		err := os.RemoveAll(pkg)
+		UnexceptedError(err)
+
+		fmt.Println("Removed the Package Successfully!")
+	} else {
+		// Error
+
+		OtherError("Please pass a package name.")
+	}
 }

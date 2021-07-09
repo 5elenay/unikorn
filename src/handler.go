@@ -22,6 +22,12 @@ func init() {
 			"unikorn add <github username> <repo name> | unikorn add <github username> <repo name> <branch>",
 			CommandAdd,
 		},
+		{
+			"remove",
+			"Remove a package from project.",
+			"unikorn remove <name>",
+			CommandRemove,
+		},
 	}
 }
 
