@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 )
 
 var currentVersion string = "0.0.1"
@@ -14,7 +15,7 @@ func main() {
 }
 
 // Download File from URL
-func DownloadFile(url string, name string) {
+func DownloadFile(url string, name string, temp string) string {
 	resp, err := http.Get(url)
 	UnexceptedError(err)
 
@@ -24,39 +25,53 @@ func DownloadFile(url string, name string) {
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	UnexceptedError(err)
 
-	ioutil.WriteFile(name, bodyBytes, 0666)
+	err = ioutil.WriteFile(fmt.Sprintf("%s/%s", temp, name), bodyBytes, 0666)
+	UnexceptedError(err)
+
+	return name
 }
 
 // Download a Github Repo
 func DownloadFromGithub(github Github) {
-	var branch string
-
-	if github.Branch == "" {
-		branch = "master"
-	} else {
-		branch = github.Branch
-	}
-
 	// Download Zip URL
-	repoUrl := fmt.Sprintf("https://github.com/%s/%s/archive/refs/heads/%s.zip", github.Username, github.Repo, branch)
+	repoUrl := fmt.Sprintf("https://github.com/%s/%s/archive/refs/heads/%s.zip", github.Username, github.Repo, github.Branch)
 
 	// File Name
 	fileName := fmt.Sprintf("%s.zip", github.Repo)
 
-	DownloadFile(repoUrl, fileName)
+	// Create Temp Directory for ZIP
+	folderName := CreateTempDirectory()
+
+	// Download the ZIP from URL
+	DownloadFile(repoUrl, fileName, folderName)
 }
 
-// Find Command
+func CreateTempDirectory() string {
+	// Create Temp Directory for Unikorn
+	tempFolder := ".unik"
+
+	err := os.Mkdir(tempFolder, os.ModePerm)
+	UnexceptedError(err)
+
+	return tempFolder
+}
+
+// Find Command from List of Commands
 func FindCommand(commands []Command, name string, function func(found Command)) {
 	var found bool
 
 	for _, item := range commands {
+		// Check if has Same Command Name
 		if item.Name == name {
+			// Run the Function
 			function(item)
+
+			// Make Found True and Break the Loop
 			found = true
 			break
 		}
 	}
 
+	// Check if Found or Not
 	CommandNotFound(found)
 }

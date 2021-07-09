@@ -25,17 +25,29 @@ func CommandHelp(params []string) {
 
 // Download Command
 func CommandAdd(params []string) {
+	var repo Github
+
 	if len(params) == 2 {
 		// Username & Repo
 
-		fmt.Println("Soon!")
+		repo = Github{
+			params[0],
+			params[1],
+			"main",
+		}
 	} else if len(params) >= 3 {
 		// Username, Repo & Branch
 
-		fmt.Println("Soon!")
+		repo = Github{
+			params[0],
+			params[1],
+			params[2],
+		}
 	} else {
 		// Error
 
 		OtherError("Please pass parameters correctly.")
 	}
+
+	DownloadFromGithub(repo)
 }

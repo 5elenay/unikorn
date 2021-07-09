@@ -7,7 +7,7 @@ import (
 
 var allCommands []Command
 
-// Create Commands
+// Create All Commands
 func init() {
 	allCommands = []Command{
 		{
@@ -29,12 +29,14 @@ func init() {
 func HandleCommands() {
 	parameters := os.Args[1:]
 
+	// Check Parameter Length
 	if len(parameters) == 0 {
 		OtherError("You need to pass a parameter. Type 'help' for more information.")
 	}
 
 	parameter := strings.ToLower(parameters[0])
 
+	// Find and Handle Command
 	FindCommand(allCommands, parameter, func(found Command) {
 		found.Handler(parameters[1:])
 	})
