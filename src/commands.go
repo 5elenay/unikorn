@@ -72,8 +72,8 @@ func CommandRemove(params []string) {
 	fmt.Println("Removed the Package Successfully!")
 }
 
-// Update Command
-func CommandUpdate(params []string) {
+// Sync Command
+func CommandSync(params []string) {
 	if len(params) == 0 {
 		// Error
 		OtherError("Please pass a package name.")

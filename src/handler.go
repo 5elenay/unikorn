@@ -29,10 +29,10 @@ func init() {
 			CommandRemove,
 		},
 		{
-			"update",
-			"Update a package.",
-			"unikorn update <package name>",
-			CommandUpdate,
+			"sync",
+			"Sync a package (delete & install latest version.).",
+			"unikorn sync <package name>",
+			CommandSync,
 		},
 	}
 }
