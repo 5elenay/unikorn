@@ -17,14 +17,16 @@ func DownloadFile(url, name, temp string) string {
 	resp, err := http.Get(url)
 	UnexceptedError(err)
 
-	// Close When All the Jobs are Finished
+	// Close Body When All the Jobs are Finished
 	defer resp.Body.Close()
 
+	// Read All Bytes
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	UnexceptedError(err)
 
 	filePath := fmt.Sprintf("%s/%s", temp, name)
 
+	// Save to the File
 	err = ioutil.WriteFile(filePath, bodyBytes, 0666)
 	UnexceptedError(err)
 
@@ -34,10 +36,10 @@ func DownloadFile(url, name, temp string) string {
 // Download a Github Repo
 func DownloadFromGithub(github Github) {
 	// Download Zip URL
-	repoUrl := fmt.Sprintf("https://github.com/%s/%s/archive/refs/heads/%s.zip", github.Username, github.Repo, github.Branch)
+	repoUrl := github.CreateUrl()
 	fmt.Println("Repo URL:", repoUrl)
 
-	// File Name
+	// ZIP File Name
 	fileName := fmt.Sprintf("%s.zip", github.Repo)
 
 	// Create Temp Directory for ZIP
@@ -88,6 +90,7 @@ func DownloadFromGithub(github Github) {
 	convertedData.CheckPackages()
 }
 
+// Rename File and Move
 func RenameAndMove(github Github, metadata PackageMetadata, path, old string) {
 	folderName := metadata.Name
 
@@ -116,45 +119,26 @@ func RenameAndMove(github Github, metadata PackageMetadata, path, old string) {
 	fmt.Println("Moved Successfully!")
 }
 
+// Create Temp Directory for Unikorn
 func CreateTempDirectory() string {
-	// Create Temp Directory for Unikorn
 	tempFolder := ".unik"
 	os.Mkdir(tempFolder, os.ModePerm)
 
 	return tempFolder
 }
 
+// Delete Directory Safely
 func DeleteDirectorySafe(path string) {
 	err := os.RemoveAll(path)
 	UnexceptedError(err)
 }
 
+// Create Unikorn Directory for Packages
 func CreateUnikornDirectory() string {
-	// Create Unikorn Directory for Packages
 	folder := "unikorn"
 	os.Mkdir(folder, os.ModePerm)
 
 	return folder
-}
-
-// Find Command from List of Commands
-func FindCommand(commands []Command, name string, function func(found Command)) {
-	var found bool
-
-	for _, item := range commands {
-		// Check if has Same Command Name
-		if item.Name == name {
-			// Run the Function
-			function(item)
-
-			// Make Found True and Break the Loop
-			found = true
-			break
-		}
-	}
-
-	// Check if Found or Not
-	CommandNotFound(found)
 }
 
 // Extract Zip
@@ -186,7 +170,7 @@ func ConvertMetadata(path string) PackageMetadata {
 	return pkg
 }
 
-// Clone File
+// Clone File Function
 func CloneFile(file *zip.File, dest string) {
 	// Create Full Path
 	path := filepath.Join(dest, file.Name)
@@ -212,6 +196,56 @@ func CloneFile(file *zip.File, dest string) {
 	}
 }
 
+// Find Command from List of Commands
+func FindCommand(commands []Command, name string, function func(found Command)) {
+	var found bool
+
+	for _, item := range commands {
+		// Check if has Same Command Name
+		if item.Name == name {
+			// Run the Function
+			function(item)
+
+			// Make Found True and Break the Loop
+			found = true
+			break
+		}
+	}
+
+	// Check if Found or Not
+	CommandNotFound(found)
+}
+
+// Find Package
+func FindPackage(packages []PackageMetadata, name string, function func(found PackageMetadata, count int)) {
+	totalFound := 0
+
+	for _, item := range packages {
+		// Check if has Similar Package Name
+		if strings.Contains(item.Name, name) || StringSliceContains(item.Tags, name) {
+			// Increase Found Value
+			totalFound++
+			// Run the Function
+			function(item, totalFound)
+		}
+	}
+
+	fmt.Printf("Total %d Package(s) Found.", totalFound)
+}
+
+// String Slice Contains Method.
+func StringSliceContains(stringSlice []string, item string) bool {
+	for _, stringItem := range stringSlice {
+		if stringItem == item {
+			return true
+		}
+	}
+
+	return false
+}
+
+// Get File Name From Path (Useless for Now.)
+/*
 func GetFileName(file *zip.File) string {
 	fullPath := file.Name
 	splittedPath := strings.Split(fullPath, "/")
@@ -228,3 +262,4 @@ func GetFileName(file *zip.File) string {
 
 	return fileName
 }
+*/

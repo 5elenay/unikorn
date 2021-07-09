@@ -27,6 +27,11 @@ type PackageMetadata struct {
 	Github      []string `json:"github"`
 }
 
+// Create Archive Url from Github Struct.
+func (github Github) CreateUrl() string {
+	return fmt.Sprintf("https://github.com/%s/%s/archive/refs/heads/%s.zip", github.Username, github.Repo, github.Branch)
+}
+
 // Check Packages
 func (metadata PackageMetadata) CheckPackages() {
 	if len(metadata.Pipreq) > 0 {

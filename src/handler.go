@@ -34,6 +34,12 @@ func init() {
 			"unikorn sync <package name>",
 			CommandSync,
 		},
+		{
+			"find",
+			"Find downloaded package(s) from name or tag.",
+			"unikorn find <package name> | unikorn find <tag>",
+			CommandFind,
+		},
 	}
 }
 

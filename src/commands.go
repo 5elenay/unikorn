@@ -10,6 +10,7 @@ import (
 // Help Command
 func CommandHelp(params []string) {
 	if len(params) == 0 {
+		// List All Commands
 		fmt.Println("Please don't forget to check documentation on GitHub!\nList off all commands:")
 		for _, item := range allCommands {
 			fmt.Printf("    %s: %s\n", item.Name, item.Description)
@@ -17,6 +18,7 @@ func CommandHelp(params []string) {
 		fmt.Println("\nFor more information, Please type unikorn help <command>.")
 		fmt.Printf("unikorn-%s | alpha-test\n", currentVersion)
 	} else {
+		// Find and Give Informations About Command
 		param := strings.ToLower(params[0])
 
 		FindCommand(allCommands, param, func(found Command) {
@@ -95,4 +97,34 @@ func CommandSync(params []string) {
 
 	// Install Again
 	CommandAdd(saved.Github)
+}
+
+// Find Command
+func CommandFind(params []string) {
+	if len(params) == 0 {
+		// Error
+		OtherError("Please pass a package name.")
+	}
+
+	// Get all Files & Folders in Directory
+	files, err := os.ReadDir("unikorn")
+	UnexceptedError(err)
+
+	var metadatas []PackageMetadata
+
+	for _, file := range files {
+		if file.IsDir() {
+			// Convert Metadata
+			metadataFile := fmt.Sprintf("unikorn/%s/unikorn.json", file.Name())
+			metadata := ConvertMetadata(metadataFile)
+
+			// Append to Slice
+			metadatas = append(metadatas, metadata)
+		}
+	}
+
+	// Find And List Packages
+	FindPackage(metadatas, params[0], func(found PackageMetadata, count int) {
+		fmt.Printf("Result #%d\n    Package Name: %s\n    Package Description: %s\n    Package Tags: %s\n    PyPi Packages: %v\n\n", count, found.Name, found.Description, found.Tags, found.Pipreq)
+	})
 }
