@@ -80,7 +80,7 @@ func DownloadFromGithub(github Github) {
 
 	// Delete .unix Folder
 	fmt.Println("Deleting the .unik Folder..")
-	os.Remove(folderName)
+	DeleteDirectorySafe(folderName)
 	fmt.Println("Deleted .unik Folder Successfully!")
 
 	// Check Pypi Packages
@@ -102,6 +102,13 @@ func RenameAndMove(github Github, metadata PackageMetadata, path, old string) {
 	fmt.Printf("Moving Folder %s to the %s...\n", oldPath, newPath)
 	os.Rename(oldPath, newPath)
 
+	// Move Metadata
+	oldMetadataPath := fmt.Sprintf(".unik/%s/unikorn.json", old)
+	newMetadataPath := fmt.Sprintf("%s/%s/unikorn.json", path, folderName)
+
+	fmt.Printf("Moving Metadata %s to the %s...\n", oldMetadataPath, newMetadataPath)
+	os.Rename(oldMetadataPath, newMetadataPath)
+
 	fmt.Println("Moved Successfully!")
 }
 
@@ -111,6 +118,14 @@ func CreateTempDirectory() string {
 	os.Mkdir(tempFolder, os.ModePerm)
 
 	return tempFolder
+}
+
+func DeleteDirectorySafe(path string) {
+	err := os.RemoveAll(path)
+
+	if err != nil {
+		UnexceptedError(err)
+	}
 }
 
 func CreateUnikornDirectory() string {
