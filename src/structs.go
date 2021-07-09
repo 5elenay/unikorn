@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"strings"
 )
 
@@ -18,10 +20,14 @@ type Command struct {
 
 // Package Metadata Struct
 type PackageMetadata struct {
-	Name, Description string
-	Tags, Pipreq      []string
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Tags        []string `json:"tags"`
+	Pipreq      []string `json:"pipreq"`
+	Github      []string `json:"github"`
 }
 
+// Check Packages
 func (metadata PackageMetadata) CheckPackages() {
 	if len(metadata.Pipreq) > 0 {
 		packages := fmt.Sprintf("pip install %s", strings.Join(metadata.Pipreq, " "))
@@ -29,4 +35,16 @@ func (metadata PackageMetadata) CheckPackages() {
 	} else {
 		fmt.Println("Looks like this package does not contains any PyPi package!")
 	}
+}
+
+// Add Github Details
+func (metadata PackageMetadata) UpdateGithubDetails(data []string, path string) {
+	metadata.Github = data
+
+	bytes, err := json.Marshal(metadata)
+	if err != nil {
+		UnexceptedError(err)
+	}
+
+	ioutil.WriteFile(path, bytes, 0666)
 }

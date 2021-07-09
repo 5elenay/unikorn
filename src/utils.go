@@ -109,6 +109,10 @@ func RenameAndMove(github Github, metadata PackageMetadata, path, old string) {
 	fmt.Printf("Moving Metadata %s to the %s...\n", oldMetadataPath, newMetadataPath)
 	os.Rename(oldMetadataPath, newMetadataPath)
 
+	// Update Metadata
+	archiveInfo := []string{github.Username, github.Repo, github.Branch}
+	metadata.UpdateGithubDetails(archiveInfo, newMetadataPath)
+
 	fmt.Println("Moved Successfully!")
 }
 
@@ -122,10 +126,7 @@ func CreateTempDirectory() string {
 
 func DeleteDirectorySafe(path string) {
 	err := os.RemoveAll(path)
-
-	if err != nil {
-		UnexceptedError(err)
-	}
+	UnexceptedError(err)
 }
 
 func CreateUnikornDirectory() string {

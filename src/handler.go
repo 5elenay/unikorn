@@ -25,8 +25,14 @@ func init() {
 		{
 			"remove",
 			"Remove a package from project.",
-			"unikorn remove <name>",
+			"unikorn remove <package name>",
 			CommandRemove,
+		},
+		{
+			"update",
+			"Update a package.",
+			"unikorn update <package name>",
+			CommandUpdate,
 		},
 	}
 }

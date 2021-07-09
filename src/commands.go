@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -55,21 +56,43 @@ func CommandAdd(params []string) {
 
 // Remove Command
 func CommandRemove(params []string) {
-	if len(params) > 0 {
-		// Remove Package from unikorn folder
-
-		pkg := params[0]
-		pkg = fmt.Sprintf("unikorn/%s", pkg)
-		fmt.Printf("Trying to Remove Package From: %s\n", pkg)
-
-		// Remove from Folder
-		err := os.RemoveAll(pkg)
-		UnexceptedError(err)
-
-		fmt.Println("Removed the Package Successfully!")
-	} else {
+	if len(params) == 0 {
 		// Error
-
 		OtherError("Please pass a package name.")
 	}
+
+	pkg := params[0]
+	pkg = fmt.Sprintf("unikorn/%s", pkg)
+	fmt.Printf("Trying to Remove Package From: %s\n", pkg)
+
+	// Remove from Folder
+	err := os.RemoveAll(pkg)
+	UnexceptedError(err)
+
+	fmt.Println("Removed the Package Successfully!")
+}
+
+// Update Command
+func CommandUpdate(params []string) {
+	if len(params) == 0 {
+		// Error
+		OtherError("Please pass a package name.")
+	}
+
+	// Save the Metadata Before Deleting
+	pkg := params[0]
+	metadata := fmt.Sprintf("unikorn/%s/unikorn.json", pkg)
+	bytes, err := os.ReadFile(metadata)
+	UnexceptedError(err)
+
+	var saved PackageMetadata
+
+	err = json.Unmarshal(bytes, &saved)
+	UnexceptedError(err)
+
+	// Run Remove Command
+	CommandRemove(params)
+
+	// Install Again
+	CommandAdd(saved.Github)
 }
