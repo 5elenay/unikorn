@@ -3,3 +3,9 @@ unikorn.exe
 
 # Temporary Unikorn Folder
 .unik/
+
+# Test Folder
+unikorn-test/
+
+# Unikorn Folder
+unikorn/
