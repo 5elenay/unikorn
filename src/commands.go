@@ -154,3 +154,15 @@ func CommandUpdateCheck(params []string) {
 		fmt.Println("Looks like you are using the latest version of Unikorn!")
 	}
 }
+
+// Initialize
+func CommandInit(params []string) {
+	// Create Unikorn Directory
+	CreateUnikornDirectory()
+
+	// Create Unipkg File
+	file, err := os.Create("unipkg")
+	UnexceptedError(err)
+
+	file.Close()
+}

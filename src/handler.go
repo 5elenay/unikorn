@@ -46,6 +46,12 @@ func init() {
 			"unikorn check",
 			CommandUpdateCheck,
 		},
+		{
+			"init",
+			"Initialize basic setup for unikorn.",
+			"unikorn init",
+			CommandInit,
+		},
 	}
 }
 
