@@ -81,7 +81,7 @@ func CommandAdd(params []string, options []string) {
 		OtherError("Please pass parameters correctly.")
 	}
 
-	GetConfirmation("Are you sure do you want to add this package?", options)
+	GetConfirmation(fmt.Sprintf("Are you sure do you want to add this package (%s/%s ~ %s)?", repo.Username, repo.Repo, repo.Branch), options)
 	DownloadFromGithub(repo)
 }
 
@@ -98,10 +98,12 @@ func CommandRemove(params []string, options []string) {
 
 		fmt.Println("Removed the Packages Successfully!")
 	} else {
-		GetConfirmation("Are you sure do you want to delete this package?", options)
-
 		pkg := params[0]
+
+		GetConfirmation(fmt.Sprintf("Are you sure do you want to delete this package (%s)?", pkg), options)
+
 		pkg = fmt.Sprintf("unikorn/%s", pkg)
+
 		fmt.Printf("Trying to Remove Package From: %s\n", pkg)
 
 		// Remove from Folder
@@ -115,28 +117,27 @@ func CommandRemove(params []string, options []string) {
 // Sync Command
 func CommandSync(params []string, options []string) {
 	if len(params) == 0 {
-		// Error
-		OtherError("Please pass a package name.")
+
+	} else {
+		// Save the Metadata Before Deleting
+		pkg := params[0]
+		metadata := fmt.Sprintf("unikorn/%s/unikorn.json", pkg)
+		bytes, err := os.ReadFile(metadata)
+		UnexceptedError(err)
+
+		var saved PackageMetadata
+
+		err = json.Unmarshal(bytes, &saved)
+		UnexceptedError(err)
+
+		GetConfirmation(fmt.Sprintf("Are you sure do you want to sync this package (%s)?", params[0]), options)
+
+		// Run Remove Command
+		CommandRemove(params, options)
+
+		// Install Again
+		CommandAdd(saved.Github, options)
 	}
-
-	GetConfirmation("Are you sure do you want to sync this package?", options)
-
-	// Save the Metadata Before Deleting
-	pkg := params[0]
-	metadata := fmt.Sprintf("unikorn/%s/unikorn.json", pkg)
-	bytes, err := os.ReadFile(metadata)
-	UnexceptedError(err)
-
-	var saved PackageMetadata
-
-	err = json.Unmarshal(bytes, &saved)
-	UnexceptedError(err)
-
-	// Run Remove Command
-	CommandRemove(params, options)
-
-	// Install Again
-	CommandAdd(saved.Github, options)
 }
 
 // Find Command

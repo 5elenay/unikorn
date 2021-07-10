@@ -96,6 +96,7 @@ func RenameAndMove(github Github, metadata PackageMetadata, path, old string) {
 	folderName := metadata.Name
 
 	if metadata.Name == "" {
+		// Add Github Repository Name as Metadata Name
 		fmt.Println("Metadata Not Found for Package Name, Changing With Repository Name...")
 
 		folderName = github.Repo
