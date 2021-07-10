@@ -72,6 +72,7 @@ func CommandAdd(params []string) {
 		OtherError("Please pass parameters correctly.")
 	}
 
+	GetConfirmation("Are you sure do you want to add this package?")
 	DownloadFromGithub(repo)
 }
 
@@ -81,6 +82,8 @@ func CommandRemove(params []string) {
 		// Error
 		OtherError("Please pass a package name.")
 	}
+
+	GetConfirmation("Are you sure do you want to delete this package?")
 
 	pkg := params[0]
 	pkg = fmt.Sprintf("unikorn/%s", pkg)
@@ -99,6 +102,8 @@ func CommandSync(params []string) {
 		// Error
 		OtherError("Please pass a package name.")
 	}
+
+	GetConfirmation("Are you sure do you want to sync this package?")
 
 	// Save the Metadata Before Deleting
 	pkg := params[0]
@@ -175,6 +180,8 @@ func CommandUpdateCheck(params []string) {
 
 // Initialize
 func CommandInit(params []string) {
+	GetConfirmation("Are you sure you want to initialize? it may delete your unipkg file if already exists.")
+
 	// Create Unikorn Directory
 	CreateUnikornDirectory()
 

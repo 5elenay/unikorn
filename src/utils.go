@@ -2,6 +2,7 @@ package main
 
 import (
 	"archive/zip"
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -242,6 +243,23 @@ func StringSliceContains(stringSlice []string, item string) bool {
 	}
 
 	return false
+}
+
+func GetConfirmation(text string) {
+	// Get Confirmation
+	fmt.Printf("%s (y/n): ", text)
+
+	// New Reader
+	reader := bufio.NewReader(os.Stdin)
+	confirmation, err := reader.ReadString('\n')
+	UnexceptedError(err)
+
+	// Fix String
+	confirmation = strings.TrimSpace(confirmation)
+
+	if !StringSliceContains([]string{"y", "yes"}, strings.ToLower(confirmation)) {
+		CanceledTask()
+	}
 }
 
 // Get File Name From Path (Useless for Now.)

@@ -4,7 +4,7 @@ unikorn.exe
 # Temporary Unikorn Folder
 .unik/
 
-# Test Folder
+# Unikorn Test Folder
 unikorn-test/
 
 # Unikorn Folder
@@ -12,3 +12,6 @@ unikorn/
 
 # Unikorn File for Downloading Multiple Package at Same Time
 unipkg
+
+# Dev Folder for Testing Compiled Versions
+dev/

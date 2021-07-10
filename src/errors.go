@@ -3,6 +3,7 @@
 	1 - Unexcepted Error
 	2 - Command not Found
 	3 - Unknown (Other)
+	4 - Canceled Task
 */
 
 package main
@@ -32,4 +33,10 @@ func CommandNotFound(found bool) {
 func OtherError(desc string) {
 	log.Fatal(desc)
 	os.Exit(3)
+}
+
+// Canceled Task Error
+func CanceledTask() {
+	log.Fatal("Task canceled.")
+	os.Exit(4)
 }
