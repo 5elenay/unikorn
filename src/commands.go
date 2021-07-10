@@ -79,21 +79,28 @@ func CommandAdd(params []string) {
 // Remove Command
 func CommandRemove(params []string) {
 	if len(params) == 0 {
-		// Error
-		OtherError("Please pass a package name.")
+		GetConfirmation("Are you sure do you want to delete all the packages?")
+
+		fmt.Println("Trying to remove all of the packages")
+
+		// Remove from Folder
+		err := os.RemoveAll("unikorn")
+		UnexceptedError(err)
+
+		fmt.Println("Removed the Packages Successfully!")
+	} else {
+		GetConfirmation("Are you sure do you want to delete this package?")
+
+		pkg := params[0]
+		pkg = fmt.Sprintf("unikorn/%s", pkg)
+		fmt.Printf("Trying to Remove Package From: %s\n", pkg)
+
+		// Remove from Folder
+		err := os.RemoveAll(pkg)
+		UnexceptedError(err)
+
+		fmt.Println("Removed the Package Successfully!")
 	}
-
-	GetConfirmation("Are you sure do you want to delete this package?")
-
-	pkg := params[0]
-	pkg = fmt.Sprintf("unikorn/%s", pkg)
-	fmt.Printf("Trying to Remove Package From: %s\n", pkg)
-
-	// Remove from Folder
-	err := os.RemoveAll(pkg)
-	UnexceptedError(err)
-
-	fmt.Println("Removed the Package Successfully!")
 }
 
 // Sync Command
@@ -154,7 +161,7 @@ func CommandFind(params []string) {
 }
 
 // Check Unikorn Update Command
-func CommandUpdateCheck(params []string) {
+func CommandUpdateCheck(_ []string) {
 	fmt.Printf("Checking For Updates... [Current Version: %s]\n", currentVersion)
 
 	// Send Request and Get the Metadata
@@ -179,7 +186,7 @@ func CommandUpdateCheck(params []string) {
 }
 
 // Initialize
-func CommandInit(params []string) {
+func CommandInit(_ []string) {
 	GetConfirmation("Are you sure you want to initialize? it may delete your unipkg file if already exists.")
 
 	// Create Unikorn Directory

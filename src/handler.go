@@ -19,7 +19,7 @@ func init() {
 		{
 			"add",
 			"Download & add a package from github.",
-			"unikorn add <github username> <repo name> | unikorn add <github username> <repo name> <branch>",
+			"unikorn add | unikorn add <github username> <repo name> | unikorn add <github username> <repo name> <branch>",
 			CommandAdd,
 		},
 		{
