@@ -40,6 +40,12 @@ func init() {
 			"unikorn find <package name> | unikorn find <tag>",
 			CommandFind,
 		},
+		{
+			"check",
+			"Check avaible updates for Unikorn.",
+			"unikorn check",
+			CommandUpdateCheck,
+		},
 	}
 }
 

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
 )
@@ -127,4 +128,29 @@ func CommandFind(params []string) {
 	FindPackage(metadatas, params[0], func(found PackageMetadata, count int) {
 		fmt.Printf("Result #%d\n    Package Name: %s\n    Package Description: %s\n    Package Tags: %s\n    PyPi Packages: %v\n\n", count, found.Name, found.Description, found.Tags, found.Pipreq)
 	})
+}
+
+// Check Unikorn Update Command
+func CommandUpdateCheck(params []string) {
+	fmt.Printf("Checking For Updates... [Current Version: %s]\n", currentVersion)
+
+	// Send Request and Get the Metadata
+	response, err := http.Get("https://raw.githubusercontent.com/5elenay/unikorn/main/meta.json")
+	UnexceptedError(err)
+
+	defer response.Body.Close()
+
+	var result UnikornMeta
+
+	// Convert JSON to UnikornMeta Struct
+	decoder := json.NewDecoder(response.Body)
+	err = decoder.Decode(&result)
+	UnexceptedError(err)
+
+	// Check Version
+	if result.Latest != currentVersion {
+		fmt.Printf("Looks like you have an update for Unikorn. Please check: https://github.com/5elenay/unikorn/releases/latest\nLatest Release: %s\nCurrent: %s\n", result.Latest, currentVersion)
+	} else {
+		fmt.Println("Looks like you are using the latest version of Unikorn!")
+	}
 }

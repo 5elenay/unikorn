@@ -18,6 +18,11 @@ type Command struct {
 	Handler                  func(params []string)
 }
 
+// Unikorn Metadata Struct
+type UnikornMeta struct {
+	Latest, License, Git string
+}
+
 // Package Metadata Struct
 type PackageMetadata struct {
 	Name        string   `json:"name"`
