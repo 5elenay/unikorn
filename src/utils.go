@@ -43,9 +43,9 @@ func DownloadFromGithub(github Github) {
 	fileName := fmt.Sprintf("%s.zip", github.Repo)
 
 	// Create Temp Directory for ZIP
-	fmt.Println("Creating .unik Folder.")
+	fmt.Println("Creating .unik Folder...")
 	folderName := CreateTempDirectory()
-	fmt.Println("Created .unik Folder.")
+	fmt.Println("Created .unik Folder Successfully!")
 
 	// Download the ZIP from URL
 	fmt.Println("Downloading the File:", repoUrl)
@@ -55,10 +55,10 @@ func DownloadFromGithub(github Github) {
 	// Extract the ZIP
 	fmt.Println("Extracting the ZIP...")
 	ExtractZip(filePath, folderName)
-	fmt.Println("Extract Finished!")
+	fmt.Println("Extracting is Finished!")
 
 	// Delete the ZIP
-	fmt.Println("Removing the ZIP.")
+	fmt.Println("Removing the ZIP...")
 	err := os.Remove(filePath)
 	UnexceptedError(err)
 
@@ -68,20 +68,20 @@ func DownloadFromGithub(github Github) {
 	extractedName := fmt.Sprintf("%s-%s", github.Repo, github.Branch)
 
 	// Create Unikorn Folder
-	fmt.Println("Creating Unikorn Folder.")
+	fmt.Println("Creating Unikorn Folder...")
 	unikornPath := CreateUnikornDirectory()
-	fmt.Println("Created Unikorn Folder.")
+	fmt.Println("Created Unikorn Folder Successfully!")
 
 	// Convert unikorn.json to PackageMetadata
-	fmt.Println("Reading the unikorn.json")
+	fmt.Println("Reading the unikorn.json...")
 	convertedData := ConvertMetadata(fmt.Sprintf(".unik/%s/unikorn.json", extractedName))
-	fmt.Println("Converted Metadata Successfully")
+	fmt.Println("Converted Metadata Successfully!")
 
 	// Move Folder with Metadata
 	RenameAndMove(github, convertedData, unikornPath, extractedName)
 
 	// Delete .unix Folder
-	fmt.Println("Deleting the .unik Folder..")
+	fmt.Println("Deleting the .unik Folder...")
 	DeleteDirectorySafe(folderName)
 	fmt.Println("Deleted .unik Folder Successfully!")
 

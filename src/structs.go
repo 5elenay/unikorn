@@ -41,7 +41,7 @@ func (github Github) CreateUrl() string {
 func (metadata PackageMetadata) CheckPackages() {
 	if len(metadata.Pipreq) > 0 {
 		packages := fmt.Sprintf("pip install %s", strings.Join(metadata.Pipreq, " "))
-		fmt.Printf("\nThis package requires some packages from PyPi.\nFor download all of them:\n    %s", packages)
+		fmt.Printf("\nThis package requires some packages from PyPi.\nFor download all of them:\n    %s\n\n", packages)
 	} else {
 		fmt.Println("Looks like this package does not contains any PyPi package!")
 	}

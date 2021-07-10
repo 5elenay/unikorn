@@ -32,7 +32,25 @@ func CommandHelp(params []string) {
 func CommandAdd(params []string) {
 	var repo Github
 
-	if len(params) == 2 {
+	if len(params) == 0 {
+		// Read Unipkg File
+		bytes, err := os.ReadFile("unipkg")
+		UnexceptedError(err)
+
+		data := string(bytes)
+		splitted := strings.Split(strings.ReplaceAll(data, "\r\n", "\n"), "\n")
+
+		// Split Lines
+		for _, item := range splitted {
+			// Split Items
+			args := strings.Split(item, " ")
+
+			// Run Command
+			CommandAdd(args)
+		}
+
+		return
+	} else if len(params) == 2 {
 		// Username & Repo
 
 		repo = Github{
