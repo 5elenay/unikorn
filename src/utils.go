@@ -96,7 +96,18 @@ func RenameAndMove(github Github, metadata PackageMetadata, path, old string) {
 	folderName := metadata.Name
 
 	if metadata.Name == "" {
+		fmt.Println("Metadata Not Found for Package Name, Changing With Repository Name...")
+
 		folderName = github.Repo
+		metadata.Name = github.Repo
+
+		convertedBytes, err := json.Marshal(metadata)
+		UnexceptedError(err)
+
+		err = ioutil.WriteFile(fmt.Sprintf(".unik/%s/unikorn.json", old), convertedBytes, 0666)
+		UnexceptedError(err)
+
+		fmt.Println("Metadata Changed Successfully!")
 	}
 
 	oldPath := fmt.Sprintf(".unik/%s/src", old)
