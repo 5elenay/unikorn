@@ -9,27 +9,36 @@ import (
 )
 
 // Help Command
-func CommandHelp(params []string) {
+func CommandHelp(params []string, options []string) {
 	if len(params) == 0 {
-		// List All Commands
 		fmt.Println("Please don't forget to check documentation on GitHub!\nList off all commands:")
+		// List All Commands
 		for _, item := range allCommands {
 			fmt.Printf("    %s: %s\n", item.Name, item.Description)
 		}
-		fmt.Println("\nFor more information, Please type unikorn help <command>.")
+		fmt.Println("\nFor more information, Please type 'unikorn help <command>'.")
 		fmt.Printf("unikorn-%s | alpha-test\n", currentVersion)
 	} else {
 		// Find and Give Informations About Command
 		param := strings.ToLower(params[0])
 
 		FindCommand(allCommands, param, func(found Command) {
-			fmt.Printf("Description: %s\nUsage: %s\n", found.Description, found.Usage)
+			fmt.Printf("Description:\n    %s\nUsage:\n    %s\n", found.Description, strings.Join(found.Usage, "\n    "))
+
+			// List all Options
+			if len(found.Options) > 0 {
+				fmt.Print("Options:")
+
+				for _, option := range found.Options {
+					fmt.Printf("\n    %s:\n        %s\n", option.Name, option.Description)
+				}
+			}
 		})
 	}
 }
 
 // Download Command
-func CommandAdd(params []string) {
+func CommandAdd(params []string, options []string) {
 	var repo Github
 
 	if len(params) == 0 {
@@ -46,7 +55,7 @@ func CommandAdd(params []string) {
 			args := strings.Split(item, " ")
 
 			// Run Command
-			CommandAdd(args)
+			CommandAdd(args, options)
 		}
 
 		return
@@ -72,14 +81,14 @@ func CommandAdd(params []string) {
 		OtherError("Please pass parameters correctly.")
 	}
 
-	GetConfirmation("Are you sure do you want to add this package?")
+	GetConfirmation("Are you sure do you want to add this package?", options)
 	DownloadFromGithub(repo)
 }
 
 // Remove Command
-func CommandRemove(params []string) {
+func CommandRemove(params []string, options []string) {
 	if len(params) == 0 {
-		GetConfirmation("Are you sure do you want to delete all the packages?")
+		GetConfirmation("Are you sure do you want to delete all the packages?", options)
 
 		fmt.Println("Trying to remove all of the packages")
 
@@ -89,7 +98,7 @@ func CommandRemove(params []string) {
 
 		fmt.Println("Removed the Packages Successfully!")
 	} else {
-		GetConfirmation("Are you sure do you want to delete this package?")
+		GetConfirmation("Are you sure do you want to delete this package?", options)
 
 		pkg := params[0]
 		pkg = fmt.Sprintf("unikorn/%s", pkg)
@@ -104,13 +113,13 @@ func CommandRemove(params []string) {
 }
 
 // Sync Command
-func CommandSync(params []string) {
+func CommandSync(params []string, options []string) {
 	if len(params) == 0 {
 		// Error
 		OtherError("Please pass a package name.")
 	}
 
-	GetConfirmation("Are you sure do you want to sync this package?")
+	GetConfirmation("Are you sure do you want to sync this package?", options)
 
 	// Save the Metadata Before Deleting
 	pkg := params[0]
@@ -124,14 +133,14 @@ func CommandSync(params []string) {
 	UnexceptedError(err)
 
 	// Run Remove Command
-	CommandRemove(params)
+	CommandRemove(params, options)
 
 	// Install Again
-	CommandAdd(saved.Github)
+	CommandAdd(saved.Github, options)
 }
 
 // Find Command
-func CommandFind(params []string) {
+func CommandFind(params []string, options []string) {
 	if len(params) == 0 {
 		// Error
 		OtherError("Please pass a package name.")
@@ -161,7 +170,7 @@ func CommandFind(params []string) {
 }
 
 // Check Unikorn Update Command
-func CommandUpdateCheck(_ []string) {
+func CommandUpdateCheck(_ []string, options []string) {
 	fmt.Printf("Checking For Updates... [Current Version: %s]\n", currentVersion)
 
 	// Send Request and Get the Metadata
@@ -186,8 +195,8 @@ func CommandUpdateCheck(_ []string) {
 }
 
 // Initialize
-func CommandInit(_ []string) {
-	GetConfirmation("Are you sure you want to initialize? it may delete your unipkg file if already exists.")
+func CommandInit(_ []string, options []string) {
+	GetConfirmation("Are you sure you want to initialize? it may delete your unipkg file if already exists.", options)
 
 	// Create Unikorn Directory
 	CreateUnikornDirectory()

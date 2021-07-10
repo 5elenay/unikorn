@@ -245,7 +245,11 @@ func StringSliceContains(stringSlice []string, item string) bool {
 	return false
 }
 
-func GetConfirmation(text string) {
+func GetConfirmation(text string, options []string) {
+	if StringSliceContains(options, "no-confirmation") {
+		return
+	}
+
 	// Get Confirmation
 	fmt.Printf("%s (y/n): ", text)
 

@@ -6,6 +6,10 @@ import (
 )
 
 var allCommands []Command
+var noConfirmationOption Option = Option{
+	"no-confirmation",
+	"Skip confirmation process for command.",
+}
 
 // Create All Commands
 func init() {
@@ -13,43 +17,58 @@ func init() {
 		{
 			"help",
 			"Shows list of all commands.",
-			"unikorn help | unikorn help <command>",
+			[]string{"unikorn help", "unikorn help <command>"},
+			[]Option{},
 			CommandHelp,
 		},
 		{
 			"add",
 			"Download & add a package from github.",
-			"unikorn add | unikorn add <github username> <repo name> | unikorn add <github username> <repo name> <branch>",
+			[]string{"unikorn add", "unikorn add <github username> <repo name>", "unikorn add <github username> <repo name> <branch>"},
+			[]Option{
+				noConfirmationOption,
+			},
 			CommandAdd,
 		},
 		{
 			"remove",
 			"Remove a package from project.",
-			"unikorn remove <package name>",
+			[]string{"unikorn remove", "unikorn remove <package name>"},
+			[]Option{
+				noConfirmationOption,
+			},
 			CommandRemove,
 		},
 		{
 			"sync",
 			"Sync a package (delete & install latest version.).",
-			"unikorn sync <package name>",
+			[]string{"unikorn sync <package name>"},
+			[]Option{
+				noConfirmationOption,
+			},
 			CommandSync,
 		},
 		{
 			"find",
 			"Find downloaded package(s) from name or tag.",
-			"unikorn find <package name> | unikorn find <tag>",
+			[]string{"unikorn find <package name>", "unikorn find <tag>"},
+			[]Option{},
 			CommandFind,
 		},
 		{
 			"check",
 			"Check avaible updates for Unikorn.",
-			"unikorn check",
+			[]string{"unikorn check"},
+			[]Option{},
 			CommandUpdateCheck,
 		},
 		{
 			"init",
 			"Initialize basic setup for unikorn.",
-			"unikorn init",
+			[]string{"unikorn init"},
+			[]Option{
+				noConfirmationOption,
+			},
 			CommandInit,
 		},
 	}
@@ -57,17 +76,35 @@ func init() {
 
 // Handle Commands
 func HandleCommands() {
-	parameters := os.Args[1:]
+	args := os.Args[1:]
 
 	// Check Parameter Length
-	if len(parameters) == 0 {
+	if len(args) == 0 {
+		OtherError("You need to pass a argument. Type 'help' for more information.")
+	}
+
+	var params []string
+	var options []string
+
+	for _, item := range args {
+		lowerCaseItem := strings.ToLower(item)
+
+		if strings.HasPrefix(lowerCaseItem, "-") {
+			options = append(options, strings.TrimPrefix(lowerCaseItem, "-"))
+		} else {
+			params = append(params, lowerCaseItem)
+		}
+	}
+
+	// Check Parameter Length
+	if len(params) == 0 {
 		OtherError("You need to pass a parameter. Type 'help' for more information.")
 	}
 
-	parameter := strings.ToLower(parameters[0])
+	parameter := strings.ToLower(params[0])
 
 	// Find and Handle Command
 	FindCommand(allCommands, parameter, func(found Command) {
-		found.Handler(parameters[1:])
+		found.Handler(params[1:], options)
 	})
 }

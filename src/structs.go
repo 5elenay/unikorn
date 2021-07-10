@@ -14,8 +14,15 @@ type Github struct {
 
 // Unikorn Command Struct
 type Command struct {
-	Name, Description, Usage string
-	Handler                  func(params []string)
+	Name, Description string
+	Usage             []string
+	Options           []Option
+	Handler           func(params []string, options []string)
+}
+
+// Unikorn Command Line Option Struct
+type Option struct {
+	Name, Description string
 }
 
 // Unikorn Metadata Struct
