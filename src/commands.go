@@ -175,9 +175,12 @@ func CommandFind(params []string, options []string) {
 		}
 	}
 
+	shouldFindAll := StringSliceContains(options, "all")
+
 	// Find And List Packages
-	FindPackage(metadatas, params[0], func(found PackageMetadata, count int) {
-		fmt.Printf("Result #%d\n    Package Name: %s\n    Package Description: %s\n    Package Tags: %s\n    PyPi Packages: %v\n\n", count, found.Name, found.Description, found.Tags, found.Pipreq)
+	FindPackage(metadatas, params[0], func(found PackageMetadata, count int) bool {
+		fmt.Printf("Result #%d:\n    Package Name: %s\n    Package Description: %s\n    Package Tags: %s\n    PyPi Packages: %v\n\n", count, found.Name, found.Description, found.Tags, found.Pipreq)
+		return shouldFindAll
 	})
 }
 

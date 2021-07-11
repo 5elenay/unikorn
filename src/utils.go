@@ -230,7 +230,7 @@ func FindCommand(commands []Command, name string, function func(found Command)) 
 }
 
 // Find Package
-func FindPackage(packages []PackageMetadata, name string, function func(found PackageMetadata, count int)) {
+func FindPackage(packages []PackageMetadata, name string, function func(found PackageMetadata, count int) bool) {
 	totalFound := 0
 
 	for _, item := range packages {
@@ -239,7 +239,9 @@ func FindPackage(packages []PackageMetadata, name string, function func(found Pa
 			// Increase Found Value
 			totalFound++
 			// Run the Function
-			function(item, totalFound)
+			if !function(item, totalFound) {
+				break
+			}
 		}
 	}
 
