@@ -217,3 +217,8 @@ func CommandList(_ []string, _ []string) {
 		fmt.Printf("Package #%d:\n    Package Name: %s\n    Package Description: %s\n    Package Tags: %s\n    PyPi Packages: %v\n\n", index+1, item.Name, item.Description, item.Tags, item.Pipreq)
 	}
 }
+
+// Check Version Command
+func CommandVersion(_ []string, _ []string) {
+	fmt.Printf("unikorn-%s | alpha-test\n", currentVersion)
+}

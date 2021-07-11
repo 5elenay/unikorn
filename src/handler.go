@@ -76,12 +76,19 @@ func init() {
 		},
 		{
 			"init",
-			"Initialize basic setup for unikorn.",
+			"Initialize basic setup for Unikorn.",
 			[]string{"unikorn init"},
 			[]Option{
 				noConfirmationOption,
 			},
 			CommandInit,
+		},
+		{
+			"version",
+			"Check Unikorn version.",
+			[]string{"unikorn version"},
+			[]Option{},
+			CommandVersion,
 		},
 	}
 }
