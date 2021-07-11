@@ -117,7 +117,18 @@ func CommandRemove(params []string, options []string) {
 // Sync Command
 func CommandSync(params []string, options []string) {
 	if len(params) == 0 {
+		GetConfirmation("Are you sure do you want to sync all packages?", options)
 
+		// Get all Packages in the Unikorn Folder
+		files, err := os.ReadDir("unikorn")
+		UnexceptedError(err)
+
+		for _, file := range files {
+			if file.IsDir() {
+				// Sync Package
+				CommandSync([]string{file.Name()}, options)
+			}
+		}
 	} else {
 		// Save the Metadata Before Deleting
 		pkg := params[0]
@@ -130,7 +141,7 @@ func CommandSync(params []string, options []string) {
 		err = json.Unmarshal(bytes, &saved)
 		UnexceptedError(err)
 
-		GetConfirmation(fmt.Sprintf("Are you sure do you want to sync this package (%s)?", params[0]), options)
+		GetConfirmation(fmt.Sprintf("Are you sure do you want to sync this package (%s)?", pkg), options)
 
 		// Run Remove Command
 		CommandRemove(params, options)
