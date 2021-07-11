@@ -3,7 +3,7 @@
 
 ## Key Features
 - `Speed`: You can add a package in one second.
-- `Usage`: Only simple and usefull commands
+- `Usage`: Only simple and useful commands
 - `Deploy`: Just release your package in GitHub and done.
 - `Sync`: Sync all of your packages in one command.
 - `Build`: You can create basic template for unikorn in <10 second. _soon._
