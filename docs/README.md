@@ -17,6 +17,16 @@ Check [release page](https://github.com/5elenay/unikorn/releases/latest) for bin
 
 Now you only need to add unikorn to the path and you are done!
 
+## Using a Unikorn Package
+
+Since all of the packages in the `unikorn` folder, we can do this:
+
+```py
+from unikorn import helloworld
+
+helloworld.hello() # hello world
+```
+
 ## Compiling
 
 If you can't find a release for your system, you can compile Unikorn yourself easily.
