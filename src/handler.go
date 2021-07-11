@@ -52,8 +52,20 @@ func init() {
 			"find",
 			"Find downloaded package(s) from name or tag.",
 			[]string{"unikorn find <package name>", "unikorn find <tag>"},
-			[]Option{},
+			[]Option{
+				{
+					"all",
+					"Find all packages.",
+				},
+			},
 			CommandFind,
+		},
+		{
+			"list",
+			"List downloaded packages.",
+			[]string{"unikorn list"},
+			[]Option{},
+			CommandList,
 		},
 		{
 			"check",

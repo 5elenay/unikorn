@@ -9,7 +9,7 @@ import (
 )
 
 // Help Command
-func CommandHelp(params []string, options []string) {
+func CommandHelp(params []string, _ []string) {
 	if len(params) == 0 {
 		fmt.Println("Please don't forget to check documentation on GitHub!\nList off all commands:")
 		// List All Commands
@@ -159,21 +159,7 @@ func CommandFind(params []string, options []string) {
 	}
 
 	// Get all Files & Folders in Directory
-	files, err := os.ReadDir("unikorn")
-	UnexceptedError(err)
-
-	var metadatas []PackageMetadata
-
-	for _, file := range files {
-		if file.IsDir() {
-			// Convert Metadata
-			metadataFile := fmt.Sprintf("unikorn/%s/unikorn.json", file.Name())
-			metadata := ConvertMetadata(metadataFile)
-
-			// Append to Slice
-			metadatas = append(metadatas, metadata)
-		}
-	}
+	metadatas := GetPackages()
 
 	shouldFindAll := StringSliceContains(options, "all")
 
@@ -185,7 +171,7 @@ func CommandFind(params []string, options []string) {
 }
 
 // Check Unikorn Update Command
-func CommandUpdateCheck(_ []string, options []string) {
+func CommandUpdateCheck(_ []string, _ []string) {
 	fmt.Printf("Checking For Updates... [Current Version: %s]\n", currentVersion)
 
 	// Send Request and Get the Metadata
@@ -221,4 +207,13 @@ func CommandInit(_ []string, options []string) {
 	UnexceptedError(err)
 
 	file.Close()
+}
+
+// List All Packages Command
+func CommandList(_ []string, _ []string) {
+	metadatas := GetPackages()
+
+	for index, item := range metadatas {
+		fmt.Printf("Package #%d:\n    Package Name: %s\n    Package Description: %s\n    Package Tags: %s\n    PyPi Packages: %v\n\n", index+1, item.Name, item.Description, item.Tags, item.Pipreq)
+	}
 }

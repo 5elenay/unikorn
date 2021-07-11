@@ -280,6 +280,26 @@ func GetConfirmation(text string, options []string) {
 	}
 }
 
+func GetPackages() []PackageMetadata {
+	files, err := os.ReadDir("unikorn")
+	UnexceptedError(err)
+
+	var metadatas []PackageMetadata
+
+	for _, file := range files {
+		if file.IsDir() {
+			// Convert Metadata
+			metadataFile := fmt.Sprintf("unikorn/%s/unikorn.json", file.Name())
+			metadata := ConvertMetadata(metadataFile)
+
+			// Append to Slice
+			metadatas = append(metadatas, metadata)
+		}
+	}
+
+	return metadatas
+}
+
 // Get File Name From Path (Useless for Now.)
 /*
 func GetFileName(file *zip.File) string {
