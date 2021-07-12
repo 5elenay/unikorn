@@ -1,5 +1,5 @@
 # Unikorn Documentation - Making Your Own Unikorn Package
-So... you probably know almost anything for Unikorn now, Let's make our own package!
+So... you probably know almost anything about Unikorn now, Let's make our own package!
 
 ## Example Repo
 Check [this](https://github.com/5elenay/unikorn-hello-world) repository for example.
@@ -16,7 +16,7 @@ metadata.json must contain these informations:
     - **Example**: `"Database client for PostgreSQL."` 
 - `tags`: Tags for when we need to find a package.
     - **Example**: `["database", "postgres"]` 
-- `pipreq`: If your package uses some packages from PyPi, add 
+- `pipreq`: If your package uses some packages from PyPi, you can add packages here.
     - **Example**: `["postgrey", "pewn"]` 
 
 ## Src Folder
