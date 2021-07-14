@@ -35,7 +35,7 @@ func DownloadFile(url, name, temp string) string {
 }
 
 // Download a Github Repo
-func DownloadFromGithub(github Github) {
+func DownloadFromGithub(github Github, options []string) {
 	// Download Zip URL
 	repoUrl := github.CreateUrl()
 	fmt.Println("Repo URL:", repoUrl)
@@ -86,9 +86,9 @@ func DownloadFromGithub(github Github) {
 	DeleteDirectorySafe(folderName)
 	fmt.Println("Deleted .unik Folder Successfully!")
 
-	// Check Pypi Packages
-	fmt.Println("Checking for PyPi Packages...")
-	convertedData.CheckPackages()
+	// Check Packages
+	fmt.Println("Checking for External Packages...")
+	convertedData.CheckPackages(options)
 }
 
 // Rename File and Move

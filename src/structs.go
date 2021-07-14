@@ -32,11 +32,12 @@ type UnikornMeta struct {
 
 // Package Metadata Struct
 type PackageMetadata struct {
-	Name        string   `json:"name"`
-	Description string   `json:"description"`
-	Tags        []string `json:"tags"`
-	Pipreq      []string `json:"pipreq"`
-	Github      []string `json:"github"`
+	Name        string     `json:"name"`
+	Description string     `json:"description"`
+	Tags        []string   `json:"tags"`
+	Pipreq      []string   `json:"pipreq"`
+	Unireq      [][]string `json:"unireq"`
+	Github      []string   `json:"github"`
 }
 
 // Create Archive Url from Github Struct.
@@ -45,12 +46,18 @@ func (github Github) CreateUrl() string {
 }
 
 // Check Packages
-func (metadata PackageMetadata) CheckPackages() {
+func (metadata PackageMetadata) CheckPackages(options []string) {
+	// Check Unikorn Packages
+	if len(metadata.Unireq) > 0 {
+		for _, item := range metadata.Unireq {
+			CommandAdd(item, options)
+		}
+	}
+
+	// Check PyPi Packages
 	if len(metadata.Pipreq) > 0 {
 		packages := fmt.Sprintf("pip install %s", strings.Join(metadata.Pipreq, " "))
-		fmt.Printf("\nThis package requires some packages from PyPi.\nFor download all of them:\n    %s\n\n", packages)
-	} else {
-		fmt.Println("Looks like this package does not contains any PyPi package!")
+		fmt.Printf("\nThis (%s) package requires some packages from PyPi.\nFor download all of them:\n    %s\n\n", metadata.Name, packages)
 	}
 }
 

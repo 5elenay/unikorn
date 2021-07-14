@@ -2,7 +2,7 @@ package main
 
 // import "fmt"
 
-var currentVersion string = "0.0.1"
+var currentVersion string = "0.1.0"
 
 func main() {
 	// Handle Commands

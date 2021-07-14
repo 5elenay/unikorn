@@ -82,7 +82,7 @@ func CommandAdd(params []string, options []string) {
 	}
 
 	GetConfirmation(fmt.Sprintf("Are you sure do you want to add this package (%s/%s ~ %s)?", repo.Username, repo.Repo, repo.Branch), options)
-	DownloadFromGithub(repo)
+	DownloadFromGithub(repo, options)
 }
 
 // Remove Command
