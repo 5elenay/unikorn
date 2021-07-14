@@ -6,10 +6,10 @@ Check [this](https://github.com/5elenay/unikorn-hello-world) repository for exam
 
 ## What We Need?
 - a `src` folder for our package.
-- a `metadata.json` file for give some information about our package.
+- a `unikorn.json` file for give some information about our package.
 
 ## Metadata
-metadata.json must contain these informations:
+unikorn.json must contain these informations:
 - `name`: Name of the package, if not it will be the repository name.
     - **Example**: `"helloworld"` 
 - `description`: Description for package.
@@ -18,6 +18,8 @@ metadata.json must contain these informations:
     - **Example**: `["database", "postgres"]` 
 - `pipreq`: If your package uses some packages from PyPi, you can add packages here.
     - **Example**: `["postgrey", "pewn"]` 
+- `unireq`: If your package uses some packages from Unikorn, you can add packages here.
+    - **Example**: `[ ["5elenay", "unikorn-hello-world"], ["user", "repo", "branch"] ]` 
 
 ## Src Folder
 We will add all of the code in `src` folder. Check example in hello-world repo.
