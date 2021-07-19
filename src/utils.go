@@ -265,15 +265,8 @@ func GetConfirmation(text string, options []string) {
 	}
 
 	// Get Confirmation
-	fmt.Printf("%s (y/n): ", text)
-
-	// New Reader
-	reader := bufio.NewReader(os.Stdin)
-	confirmation, err := reader.ReadString('\n')
-	UnexceptedError(err)
-
-	// Fix String
-	confirmation = strings.TrimSpace(confirmation)
+	var confirmation string
+	ReadInput(fmt.Sprintf("%s (y/n): ", text), &confirmation)
 
 	if !StringSliceContains([]string{"y", "yes"}, strings.ToLower(confirmation)) {
 		CanceledTask()
@@ -298,6 +291,30 @@ func GetPackages() []PackageMetadata {
 	}
 
 	return metadatas
+}
+
+// Simple Function for Read Input
+func ReadInput(text string, variable *string) {
+	// Get Confirmation
+	fmt.Print(text)
+
+	// New Reader
+	reader := bufio.NewReader(os.Stdin)
+	result, err := reader.ReadString('\n')
+	UnexceptedError(err)
+
+	(*variable) = strings.TrimSpace(result)
+}
+
+// Seperate String and Trim Spaces
+func SeperateString(text string, sep string) []string {
+	var result []string
+
+	for _, item := range strings.Split(text, sep) {
+		result = append(result, strings.TrimSpace(item))
+	}
+
+	return result
 }
 
 // Get File Name From Path (Useless for Now.)

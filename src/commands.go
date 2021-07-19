@@ -222,3 +222,94 @@ func CommandList(_ []string, _ []string) {
 func CommandVersion(_ []string, _ []string) {
 	fmt.Printf("unikorn-%s | alpha-test\n", currentVersion)
 }
+
+// Build a Template for Start Making Your Own Unikorn Package
+func CommandNew(_ []string, options []string) {
+	GetConfirmation("Are you sure you want to build new template? it may overwrite your unikorn.json and __init__.py file if already exists.", options)
+
+	var packageName, packageDescription, packageTags, pypiRequirements, unikornPackages string
+
+	// List of Question with Variable Pointers
+	questions := []Question{
+		{
+			"Name of the Package: ",
+			&packageName,
+		},
+		{
+			"Description for your Package: ",
+			&packageDescription,
+		},
+		{
+			"Tags for your Package\n    (seperate with ',' character.): ",
+			&packageTags,
+		},
+		{
+			"If your Package uses some packages from pypi, List all of them\n    (seperate with ',' character.): ",
+			&pypiRequirements,
+		},
+		{
+			"If your Package uses some unikorn packages, List all of them\n    (seperate with spaces.)\n    (format is 'username:repo:branch' or 'username:repo'.): ",
+			&unikornPackages,
+		},
+	}
+
+	// Ask Questions
+	for _, que := range questions {
+		ReadInput(que.Question, que.Variable)
+	}
+
+	metadata := PackageMetadata{
+		Name:        packageName,
+		Description: packageDescription,
+		Tags:        SeperateString(packageTags, ","),
+		Pipreq:      SeperateString(pypiRequirements, ","),
+		Github:      []string{},
+	}
+
+	// Check Tags and Pipreq
+	if len(metadata.Tags) == 1 && metadata.Tags[0] == "" {
+		metadata.Tags = []string{}
+	}
+	if len(metadata.Pipreq) == 1 && metadata.Pipreq[0] == "" {
+		metadata.Pipreq = []string{}
+	}
+
+	// Format for Unireq
+	var unikornList [][]string
+	packages := strings.Split(unikornPackages, " ")
+
+	for _, pkg := range packages {
+		if pkg == "" {
+			continue
+		}
+
+		unikornList = append(unikornList, strings.Split(pkg, ":"))
+	}
+
+	if len(unikornList) == 0 {
+		metadata.Unireq = [][]string{}
+	} else {
+		metadata.Unireq = unikornList
+	}
+
+	// Convert Metadata to Beautify JSON
+	data, err := json.MarshalIndent(metadata, "", "    ")
+	UnexceptedError(err)
+
+	// Create unikorn.json
+	fmt.Println("Creating unikorn.json File...")
+	err = os.WriteFile("unikorn.json", data, 0666)
+	UnexceptedError(err)
+	fmt.Println("Created unikorn.json File Successfully!")
+
+	// Create Package Folder
+	fmt.Println("Creating src Folder...")
+	os.Mkdir("src", os.ModePerm)
+	fmt.Println("Created src Folder Successfully!")
+
+	// Add __init__.py File
+	fmt.Println("Creating __init__.py File...")
+	err = os.WriteFile("./src/__init__.py", []byte("hello = lambda x: print('Hello: ', x)"), 0666)
+	UnexceptedError(err)
+	fmt.Println("Created __init__.py File Successfully!")
+}
