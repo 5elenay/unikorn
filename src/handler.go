@@ -94,7 +94,9 @@ func init() {
 			"new",
 			"Generate a Unikorn package template in <10 second.",
 			[]string{"unikorn new"},
-			[]Option{},
+			[]Option{
+				noConfirmationOption,
+			},
 			CommandNew,
 		},
 	}
