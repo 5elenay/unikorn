@@ -129,3 +129,17 @@ Check Unikorn version.
 ```bash
 unikorn version
 ```
+
+## new
+
+Generate a Unikorn package template in <10 second.
+
+### Example(s)
+
+```bash
+unikorn new
+```
+
+### Options
+
+- `no-confirmation`: Skip confirmation process for command.
